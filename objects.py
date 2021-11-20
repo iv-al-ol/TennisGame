@@ -42,7 +42,7 @@ class Ball(pg.sprite.Sprite):
         if self.direction_move == "Left":
             self.rect.x -= self.move_speed
         elif self.direction_move == "Right":
-            self.rect.x += self.move_speed
+            self.rect.x += self.move_speed       
 
 class Base(pg.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -53,6 +53,7 @@ class Base(pg.sprite.Sprite):
         self.image.fill(color.RED)
         self.rect = self.image.get_rect()
         self.rect.center = (pos_x, pos_y)
+        self.health = prop.BASE_HEALTH
 
     def update(self):
         pass
