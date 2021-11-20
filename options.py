@@ -1,8 +1,8 @@
 # Screen options
-WIDTH = 1280
-HEIGHT = 720
-FPS = 60
+WIDTH = 1280  # Ширина окна программы
+HEIGHT = 720  # Высота окна программы
+FPS = 60  # Частота кадров программы
 
 # Game options
-BALL_LINE = HEIGHT//2
-BORDER = WIDTH//2
+BALL_LINE = HEIGHT//2  # Линия движения снаряда
+BORDER = WIDTH//2  # Граница разделения зон игроков

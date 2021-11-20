@@ -26,7 +26,7 @@ def map_draw(surf):
 
     gnd_line(surf)
     vert_line(surf, opt.BORDER, 3)
-    draw_vert_lines()
+    #draw_vert_lines()
     fnc.draw_text(surf, "Игрок №1", opt.WIDTH//50, 
                   opt.WIDTH//4, opt.HEIGHT//50, color.WHITE)
     fnc.draw_text(surf, "Игрок №2", opt.WIDTH//50, 
