@@ -1,6 +1,11 @@
-import random as rnd
 import pygame as pg
+
 import color
+import space
+import options as opt
+import objects as obj
+import properties as prop
+import random as rnd
 
 def random_yes():
     """Возвращает случайное лоическое значение."""

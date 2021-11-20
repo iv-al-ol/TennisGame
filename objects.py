@@ -44,13 +44,22 @@ class Ball(pg.sprite.Sprite):
             elif self.direction_move == "Right":
                 self.rect.x += self.move_speed
         
-        if self.grounded == False:
-            to_land()
+        def check_death_border():
+            """Проверяет пересечение границы смерти."""
+            if (self.rect.centerx <= opt.DEATH_LINE_1):
+                prop.PLAYER_2_SCORE += 1
+                self.kill()
+            if (self.rect.centerx >= opt.DEATH_LINE_2):
+                prop.PLAYER_1_SCORE += 1
+                self.kill()
         
-        if self.grounded and self.direction_choised == False:
+        if not self.grounded:
+            to_land()
+        if self.grounded and not self.direction_choised:
             choise_direction()
-
+        
         direction()
+        check_death_border()
         
         keystate = pg.key.get_pressed()
         if keystate[pg.K_LCTRL]:
@@ -59,7 +68,7 @@ class Ball(pg.sprite.Sprite):
             pass
 
 class Base(pg.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
+    def __init__(self, coord):
         pg.sprite.Sprite.__init__(self)
         self.health = prop.BASE_HEALTH  # Здоровье базы
         self.width = prop.BASE_WIDTH
@@ -67,12 +76,12 @@ class Base(pg.sprite.Sprite):
         self.image = pg.Surface((self.width, self.height))
         self.image.fill(color.RED)
         self.rect = self.image.get_rect()
-        self.rect.center = (pos_x, pos_y)
+        self.rect.center = (coord)
         
-    def update(self, pos_x, pos_y):
+    def update(self, coord):
         self.width = prop.BASE_WIDTH
         self.height = prop.BASE_HEGHT * self.health//prop.BASE_HEALTH
         self.image = pg.Surface((self.width, self.height))
         self.image.fill(color.RED)
         self.rect = self.image.get_rect()
-        self.rect.center = (pos_x, pos_y)
+        self.rect.center = (coord)
