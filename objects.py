@@ -19,8 +19,9 @@ class Ball(pg.sprite.Sprite):
         self.grounded = False  # Приземленное состояние снаряда
         self.direction_move = None  # Направление снаряда
         self.direction_choised = False  # Направление снаряда выбрано
+        self.owner = None  # Принадлежность к игроку
         self.location_area = None  # Зона расположения снаряда
-
+        
     def update(self):
         def to_land():
             """Приземляет снаряд."""
@@ -53,19 +54,49 @@ class Ball(pg.sprite.Sprite):
                 prop.PLAYER_1_SCORE += 1
                 self.kill()
         
-        if not self.grounded:
-            to_land()
-        if self.grounded and not self.direction_choised:
-            choise_direction()
+        def arrival():
+            """Условие приземления и выбора направления."""
+            if not self.grounded:
+                to_land()
+            if self.grounded and not self.direction_choised:
+                choise_direction()
         
+        def check_location():
+            """Проверяет расположение снаряда."""
+            if self.rect.right < opt.BORDER:
+                self.owner = 1
+                if self.rect.right > opt.WIDTH * 2/6:
+                    self.location_area = "Fail_1"
+                elif self.rect.right > opt.WIDTH * 1/6:
+                    self.location_area = "Normal_1"
+                elif self.rect.right > 0:
+                    self.location_area = "Best_1"
+            elif self.rect.left > opt.BORDER:
+                self.owner = 2
+                if self.rect.left < opt.WIDTH * 4/6:
+                    self.location_area = "Fail_2"
+                elif self.rect.left < opt.WIDTH * 5/6:
+                    self.location_area = "Normal_2"
+                elif self.rect.left < opt.WIDTH:
+                    self.location_area = "Best_2"
+            else:
+                self.owner = None
+            
+        def control():
+            """Отвечает за управление направлением снаряда."""
+            keystate = pg.key.get_pressed()
+            if self.owner == 1:
+                if keystate[pg.K_LCTRL]:
+                    self.direction_move = "Right"
+            if self.owner == 2:
+                if keystate[pg.K_RCTRL]:
+                    self.direction_move = "Left"
+        
+        arrival()
         direction()
+        check_location()
+        control()
         check_death_border()
-        
-        keystate = pg.key.get_pressed()
-        if keystate[pg.K_LCTRL]:
-            pass
-        if keystate[pg.K_RCTRL]:
-            pass
 
 class Base(pg.sprite.Sprite):
     def __init__(self, coord):

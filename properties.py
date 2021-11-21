@@ -4,7 +4,7 @@ import options as opt
 BALL_HEGHT = opt.HEIGHT//18  # Высота снаряда
 BALL_WIDTH = opt.WIDTH//32  # Ширина снаряда
 BALL_FALLING_SPEED = 5  # Скорость падения снаряда
-BALL_MOVE_SPEED = 20  # Скорость передвижения снаряда
+BALL_MOVE_SPEED = 5  # Скорость передвижения снаряда
 
 # Base properties
 BASE_HEGHT = opt.HEIGHT//2  # Высота базы
