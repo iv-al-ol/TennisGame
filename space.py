@@ -17,16 +17,14 @@ def map_draw(surf):
                     [pos, opt.BALL_LINE + opt.BALL_LINE//16], t)
     
     def draw_vert_lines():
-        buff_a = opt.WIDTH//9
-        buff_b = buff_a
-        for i in range(1, 14, 1):
-            buff_b = buff_b + buff_a//i
-            vert_line(surf, opt.BORDER - buff_b, 1)
-            vert_line(surf, opt.BORDER + buff_b, 1)
+        vert_line(surf, opt.WIDTH * 1//6, 1)
+        vert_line(surf, opt.WIDTH * 2//6, 1)
+        vert_line(surf, opt.WIDTH * 4//6, 1)
+        vert_line(surf, opt.WIDTH * 5//6, 1)
 
     gnd_line(surf)
     vert_line(surf, opt.BORDER, 3)
-    #draw_vert_lines()
+    draw_vert_lines()
     
     fnc.draw_text(surf, "Игрок №1", opt.WIDTH//50, 
                   opt.WIDTH//4, opt.HEIGHT//40, color.WHITE)

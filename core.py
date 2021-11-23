@@ -44,11 +44,15 @@ while running:
     # Контроль столкновений
     if pg.sprite.collide_rect(game_ball, base_plr_1):
         game_ball.direction_move = "Right"
-        base_plr_1.health -= game_ball.move_speed
+        base_plr_1.health -= game_ball.move_left_speed
+        if base_plr_1.health <= 0:
+            base_plr_1.health = 0
         base_plr_1.update(prop.BASE_1_COORD)
     if pg.sprite.collide_rect(game_ball, base_plr_2):
         game_ball.direction_move = "Left"
-        base_plr_2.health -= game_ball.move_speed
+        base_plr_2.health -= game_ball.move_right_speed
+        if base_plr_2.health <= 0:
+            base_plr_2.health = 0
         base_plr_2.update(prop.BASE_2_COORD)
     
     if not game_ball.alive():

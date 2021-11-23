@@ -15,7 +15,8 @@ class Ball(pg.sprite.Sprite):
         self.image.fill(color.YELLOW)
         self.rect = self.image.get_rect()
         self.rect.midtop = (opt.BORDER , opt.HEIGHT//6)
-        self.move_speed = prop.BALL_MOVE_SPEED  # Скорость перемещения снаряда
+        self.move_left_speed = prop.BALL_START_SPEED  # Скорость перемещения снаряда влево
+        self.move_right_speed = prop.BALL_START_SPEED  # Скорость перемещения снаряда вправо
         self.grounded = False  # Приземленное состояние снаряда
         self.direction_move = None  # Направление снаряда
         self.direction_choised = False  # Направление снаряда выбрано
@@ -30,6 +31,11 @@ class Ball(pg.sprite.Sprite):
                 self.rect.centery = opt.BALL_LINE
                 self.grounded = True
         
+        def speed_reset():
+            """Сбрасывает скорость снаряда."""
+            self.move_left_speed = prop.BALL_START_SPEED
+            self.move_right_speed = prop.BALL_START_SPEED
+
         def choise_direction():
             """Выбирает направление для снаряда."""
             if fnc.random_yes():
@@ -41,18 +47,20 @@ class Ball(pg.sprite.Sprite):
         def direction():
             """Задает направление движения снаряда."""
             if self.direction_move == "Left":
-                self.rect.x -= self.move_speed
+                self.rect.x -= self.move_left_speed
             elif self.direction_move == "Right":
-                self.rect.x += self.move_speed
+                self.rect.x += self.move_right_speed
         
         def check_death_border():
             """Проверяет пересечение границы смерти."""
             if (self.rect.centerx <= opt.DEATH_LINE_1):
                 prop.PLAYER_2_SCORE += 1
                 self.kill()
+                speed_reset()
             if (self.rect.centerx >= opt.DEATH_LINE_2):
                 prop.PLAYER_1_SCORE += 1
                 self.kill()
+                speed_reset()
         
         def arrival():
             """Условие приземления и выбора направления."""
@@ -63,7 +71,7 @@ class Ball(pg.sprite.Sprite):
         
         def check_location():
             """Проверяет расположение снаряда."""
-            if self.rect.right < opt.BORDER:
+            if self.rect.right < opt.BORDER and self.rect.left > 0:
                 self.owner = 1
                 if self.rect.right > opt.WIDTH * 2/6:
                     self.location_area = "Fail_1"
@@ -71,7 +79,7 @@ class Ball(pg.sprite.Sprite):
                     self.location_area = "Normal_1"
                 elif self.rect.right > 0:
                     self.location_area = "Best_1"
-            elif self.rect.left > opt.BORDER:
+            elif self.rect.left > opt.BORDER and self.rect.right < opt.WIDTH:
                 self.owner = 2
                 if self.rect.left < opt.WIDTH * 4/6:
                     self.location_area = "Fail_2"
@@ -85,12 +93,32 @@ class Ball(pg.sprite.Sprite):
         def control():
             """Отвечает за управление направлением снаряда."""
             keystate = pg.key.get_pressed()
-            if self.owner == 1:
+            if self.owner == 1 and self.direction_move == "Left":
                 if keystate[pg.K_LCTRL]:
-                    self.direction_move = "Right"
-            if self.owner == 2:
+                    if not prop.PLAYER_1_KEY_PRESSED:
+                        if self.location_area == "Fail_1":
+                            self.direction_move = "Left"
+                            self.move_left_speed += prop.BALL_FAIL_SPEED_UP
+                        if self.location_area == "Normal_1":
+                            self.direction_move = "Right"
+                        if self.location_area == "Best_1":
+                            self.direction_move = "Right"
+                            self.move_right_speed += prop.BALL_BEST_SPEED_UP
+                    prop.PLAYER_1_KEY_PRESSED = True
+                    prop.PLAYER_2_KEY_PRESSED = False
+            if self.owner == 2 and self.direction_move == "Right":
                 if keystate[pg.K_RCTRL]:
-                    self.direction_move = "Left"
+                    if not prop.PLAYER_2_KEY_PRESSED:
+                        if self.location_area == "Fail_2":
+                            self.direction_move = "Right"
+                            self.move_right_speed += prop.BALL_FAIL_SPEED_UP
+                        if self.location_area == "Normal_2":
+                            self.direction_move = "Left"
+                        if self.location_area == "Best_2":
+                            self.direction_move = "Left"
+                            self.move_left_speed += prop.BALL_BEST_SPEED_UP
+                    prop.PLAYER_2_KEY_PRESSED = True
+                    prop.PLAYER_1_KEY_PRESSED = False
         
         arrival()
         direction()
